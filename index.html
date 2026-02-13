@@ -3,43 +3,170 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>gift</title>
+<title>Private Gift</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
-  html, body { margin:0; padding:0; height:100%; font-family: system-ui, sans-serif; }
-  body { overflow:hidden; }
-  .particle { position:absolute; color:white; opacity:0.25; font-size:10px; animation:fall 15s linear infinite; }
-  @keyframes fall { 0%{transform:translateY(100vh)} 100%{transform:translateY(-20vh)} }
-  .gift { width:11rem; height:11rem; border-radius:1.5rem; background:linear-gradient(135deg,#a855f7,#f43f5e,#ec4899); display:flex; justify-content:center; align-items:center; box-shadow:0 35px 90px rgba(0,0,0,0.75); cursor:pointer; transition: transform 0.3s ease; }
-  .gift:hover { transform:scale(1.08) rotateY(14deg) rotateX(6deg); }
-  .glow { position:absolute; inset:0; border-radius:1.5rem; filter:blur(1.5rem); background:rgba(168,85,247,0.4); animation:glowPulse 4s infinite; }
-  @keyframes glowPulse {0%,100%{opacity:0.35}50%{opacity:0.75}}
-  .shadow-bottom { position:absolute; bottom:-1.5rem; left:50%; transform:translateX(-50%); width:8rem; height:2.5rem; background:rgba(0,0,0,0.5); filter:blur(1rem); border-radius:50%; }
-  .overlay { position:absolute; inset:0; background:black; display:flex; justify-content:center; align-items:center; flex-direction:column; color:white; text-align:center; padding:2rem; }
-  .btn { padding:1.25rem 3rem; border-radius:1rem; background:linear-gradient(to right,#a855f7,#f43f5e); color:white; font-size:1.125rem; cursor:pointer; box-shadow:0 10px 20px rgba(0,0,0,0.3); transition: transform 0.2s ease; }
-  .btn:hover { transform:scale(1.08); }
-  .message { max-width:40rem; line-height:1.75rem; margin-top:2rem; font-size:1.25rem; white-space:pre-line; }
+html, body {
+  margin:0;
+  padding:0;
+  height:100%;
+  font-family: system-ui, sans-serif;
+  background: #3a003a; /* فوشي داكن */
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  overflow:hidden;
+}
+
+/* Gift Container */
+.gift-container {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+}
+
+/* Gift Box - 3D Design */
+.gift {
+  width:12rem;
+  height:12rem;
+  background: linear-gradient(145deg,#4b004b,#800080,#a200a2);
+  border-radius:1.5rem;
+  position:relative;
+  cursor:pointer;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+  transition: transform 0.5s ease, box-shadow 0.5s ease;
+}
+
+.ribbon {
+  position:absolute;
+  width:2rem;
+  height:12rem;
+  background: linear-gradient(180deg,#ff4da6,#ff1a75);
+  left:50%;
+  top:0;
+  transform: translateX(-50%);
+  border-radius:0.5rem;
+  box-shadow: 0 5px 15px rgba(255,20,100,0.6);
+}
+
+.ribbon-horizontal {
+  position:absolute;
+  width:12rem;
+  height:2rem;
+  background: linear-gradient(90deg,#ff4da6,#ff1a75);
+  top:50%;
+  left:0;
+  transform: translateY(-50%);
+  border-radius:0.5rem;
+  box-shadow: 0 5px 15px rgba(255,20,100,0.6);
+}
+
+.gift:hover {
+  transform: scale(1.12) rotateY(15deg) rotateX(8deg) translateY(-5px);
+  box-shadow:0 35px 100px rgba(0,0,0,0.95);
+}
+
+.glow {
+  position:absolute;
+  inset:0;
+  border-radius:1.5rem;
+  background:rgba(255,20,100,0.2);
+  filter:blur(2rem);
+  transition: opacity 0.4s ease;
+}
+.gift:hover .glow {
+  opacity:0.7;
+}
+
+.shadow-bottom {
+  position:absolute;
+  bottom:-1.5rem;
+  left:50%;
+  transform:translateX(-50%);
+  width:8rem;
+  height:2.5rem;
+  background:rgba(0,0,0,0.6);
+  filter:blur(1rem);
+  border-radius:50%;
+  transition: width 0.4s ease, height 0.4s ease;
+}
+.gift:hover .shadow-bottom {
+  width:10rem;
+  height:3rem;
+}
+
+/* Overlay */
+.overlay {
+  position:absolute;
+  inset:0;
+  background: linear-gradient(to bottom, rgba(30,10,40,0.95), rgba(50,15,50,0.95));
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+  color:#ffb3d9;
+  text-align:center;
+  padding:2rem;
+  opacity:0;
+  pointer-events:none;
+  transition: opacity 0.6s ease, box-shadow 0.6s ease;
+  box-shadow: 0 0 150px rgba(255,20,100,0.2); /* subtle glow */
+}
+.overlay.show {
+  opacity:1;
+  pointer-events:auto;
+}
+
+.btn {
+  padding:1.25rem 3rem;
+  border-radius:1rem;
+  background: linear-gradient(to right,#ff4da6,#ff1a75);
+  color:white;
+  font-size:1.125rem;
+  cursor:pointer;
+  box-shadow:0 8px 20px rgba(0,0,0,0.4);
+  transition: transform 0.2s ease;
+  margin-top:2rem;
+}
+.btn:hover {
+  transform:scale(1.08);
+}
+
+.message {
+  max-width:40rem;
+  margin-top:2rem;
+  font-size:1.25rem;
+  font-family:'Cairo', sans-serif;
+  text-align:center;
+  line-height:1.8rem;
+  white-space:pre-line;
+}
+
+/* Responsive */
+@media (max-width:640px) {
+  .gift { width:8rem; height:8rem; border-radius:1rem; }
+  .ribbon, .ribbon-horizontal { width:1.5rem; height:8rem; }
+  .ribbon-horizontal { width:8rem; height:1.5rem; }
+  .shadow-bottom { width:6rem; height:2rem; }
+}
 </style>
 </head>
-<body class="bg-gradient-to-br from-fuchsia-950 via-rose-800 to-pink-700 flex justify-center items-center min-h-screen relative">
+<body>
 
-<!-- Particles -->
-<div id="particles"></div>
-
-<!-- Gift -->
-<div id="gift-container" class="flex flex-col items-center justify-center text-center">
-  <div class="gift relative flex justify-center items-center">
-    🎁
+<div class="gift-container">
+  <div class="gift">
+    <div class="ribbon"></div>
+    <div class="ribbon-horizontal"></div>
     <div class="glow"></div>
     <div class="shadow-bottom"></div>
   </div>
-  <p class="text-white/65 mt-4">Tap The Gift</p>
+  <p class="text-white/60 mt-4">إضغط على الهدية</p>
 </div>
 
-<!-- Overlay message -->
-<div id="overlay" class="overlay" style="display:none;">
-  <h2 class="text-4xl sm:text-5xl font-light">A Message Waiting For You</h2>
-  <button id="reveal-btn" class="btn mt-6">✨ Reveal Message</button>
+<div id="overlay" class="overlay">
+  <h2 class="text-4xl sm:text-5xl font-light">Private Message for Hiba</h2>
+  <button id="reveal-btn" class="btn">✨ Reveal Message</button>
   <p id="secret-message" class="message" style="display:none;">
 هِبَة يا هِبَة الله
 ما بَعرِف كيف وَقِعَت عَلَيْكِ عُيوني يَومها،
@@ -53,26 +180,32 @@
 </div>
 
 <script>
-  // Generate particles
-  const particlesContainer = document.getElementById('particles');
-  for(let i=0;i<14;i++){
-    const p = document.createElement('div');
-    p.className = 'particle';
-    p.style.left = Math.random()*100 + 'vw';
-    p.style.fontSize = (6+Math.random()*10)+'px';
-    p.style.animationDelay = (Math.random()*6)+'s';
-    particlesContainer.appendChild(p);
-  }
+const gift = document.querySelector('.gift');
+const overlay = document.getElementById('overlay');
+const revealBtn = document.getElementById('reveal-btn');
+const secretMsg = document.getElementById('secret-message');
 
-  // Gift click
-  const gift = document.querySelector('.gift');
-  const overlay = document.getElementById('overlay');
-  gift.addEventListener('click',()=>{ overlay.style.display='flex'; gift.parentElement.style.display='none'; });
+gift.addEventListener('click', () => {
+  overlay.classList.add('show');
+  gift.parentElement.style.display='none';
+});
 
-  // Reveal message
-  const revealBtn = document.getElementById('reveal-btn');
-  const secretMsg = document.getElementById('secret-message');
-  revealBtn.addEventListener('click',()=>{ secretMsg.style.display='block'; revealBtn.style.display='none'; });
+// Typing effect
+function typeMessage(element, text, speed=30){
+  element.style.display='block';
+  element.textContent='';
+  let i=0;
+  const interval = setInterval(()=>{
+    element.textContent += text[i];
+    i++;
+    if(i>=text.length) clearInterval(interval);
+  }, speed);
+}
+
+revealBtn.addEventListener('click', ()=>{
+  typeMessage(secretMsg, secretMsg.textContent);
+  revealBtn.style.display='none';
+});
 </script>
 </body>
 </html>
