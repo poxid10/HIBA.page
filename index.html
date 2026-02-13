@@ -4,143 +4,75 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>هدية رومانسية</title>
-<script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
-<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
-<script src="https://cdn.jsdelivr.net/npm/framer-motion@10.12.16/dist/framer-motion.umd.min.js" crossorigin></script>
-<script src="https://cdn.jsdelivr.net/npm/lucide@0.268.0/dist/lucide.min.js" crossorigin></script>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
   html, body { margin:0; padding:0; height:100%; font-family: system-ui, sans-serif; }
-  #root { height:100vh; width:100vw; overflow:hidden; }
+  body { overflow:hidden; }
+  .particle { position:absolute; color:white; opacity:0.25; font-size:10px; animation:fall 15s linear infinite; }
+  @keyframes fall { 0%{transform:translateY(100vh)} 100%{transform:translateY(-20vh)} }
+  .gift { width:11rem; height:11rem; border-radius:1.5rem; background:linear-gradient(135deg,#a855f7,#f43f5e,#ec4899); display:flex; justify-content:center; align-items:center; box-shadow:0 35px 90px rgba(0,0,0,0.75); cursor:pointer; transition: transform 0.3s ease; }
+  .gift:hover { transform:scale(1.08) rotateY(14deg) rotateX(6deg); }
+  .glow { position:absolute; inset:0; border-radius:1.5rem; filter:blur(1.5rem); background:rgba(168,85,247,0.4); animation:glowPulse 4s infinite; }
+  @keyframes glowPulse {0%,100%{opacity:0.35}50%{opacity:0.75}}
+  .shadow-bottom { position:absolute; bottom:-1.5rem; left:50%; transform:translateX(-50%); width:8rem; height:2.5rem; background:rgba(0,0,0,0.5); filter:blur(1rem); border-radius:50%; }
+  .overlay { position:absolute; inset:0; background:black; display:flex; justify-content:center; align-items:center; flex-direction:column; color:white; text-align:center; padding:2rem; }
+  .btn { padding:1.25rem 3rem; border-radius:1rem; background:linear-gradient(to right,#a855f7,#f43f5e); color:white; font-size:1.125rem; cursor:pointer; box-shadow:0 10px 20px rgba(0,0,0,0.3); transition: transform 0.2s ease; }
+  .btn:hover { transform:scale(1.08); }
+  .message { max-width:40rem; line-height:1.75rem; margin-top:2rem; font-size:1.25rem; white-space:pre-line; }
 </style>
 </head>
-<body>
-<div id="root"></div>
-<script>
-const { useState } = React;
-const { motion, AnimatePresence } = window['framer-motion'];
-const { Gift, Sparkles } = window.lucide;
+<body class="bg-gradient-to-br from-fuchsia-950 via-rose-800 to-pink-700 flex justify-center items-center min-h-screen relative">
 
-function App() {
-  const [opened, setOpened] = useState(false);
-  const [showMessage, setShowMessage] = useState(false);
+<!-- Particles -->
+<div id="particles"></div>
 
-  const secretMessage = `هِبَة يا هِبَة الله
+<!-- Gift -->
+<div id="gift-container" class="flex flex-col items-center justify-center text-center">
+  <div class="gift relative flex justify-center items-center">
+    🎁
+    <div class="glow"></div>
+    <div class="shadow-bottom"></div>
+  </div>
+  <p class="text-white/65 mt-4">Tap The Gift</p>
+</div>
+
+<!-- Overlay message -->
+<div id="overlay" class="overlay" style="display:none;">
+  <h2 class="text-4xl sm:text-5xl font-light">A Message Waiting For You</h2>
+  <button id="reveal-btn" class="btn mt-6">✨ Reveal Message</button>
+  <p id="secret-message" class="message" style="display:none;">
+هِبَة يا هِبَة الله
 ما بَعرِف كيف وَقِعَت عَلَيْكِ عُيوني يَومها،
 ما بَعرِف بَعدها شو صار فيني بَعدها…
 بس كان في إشي شَدَّني إِلِك،
 ويمكن لِهَيك حَسّيت إِنِّك شَي مُخْتَلِف عَن الكُل.
 
 إِنتِ راحَة، وَدِفَى، وَإِحساس حِلُو بَيجِي بِلا سَبَب
-26/11/2025❤️.`;
+26/11/2025❤️.
+  </p>
+</div>
 
-  return React.createElement('div',{className:"min-h-screen w-full overflow-hidden relative bg-gradient-to-br from-fuchsia-950 via-rose-800 to-pink-700 flex items-center justify-center perspective-[1800px]"},
-    // Soft Romantic Particles
-    React.createElement('div',{className:"absolute inset-0 overflow-hidden"},
-      Array.from({length:14}).map((_,i)=>React.createElement(motion.div,{
-        key:i,
-        initial:{y:"120%",opacity:0},
-        animate:{y:"-20%",opacity:[0,0.3,0]},
-        transition:{duration:14+Math.random()*8, repeat:Infinity, delay:Math.random()*6},
-        className:"absolute text-white/25",
-        style:{left:Math.random()*100+"%", fontSize:6+Math.random()*10}
-      },"✦"))
-    ),
-    React.createElement(AnimatePresence,null,
-      !opened ? React.createElement(motion.div,{
-        key:"gift",
-        initial:{opacity:0,scale:0.7,y:40},
-        animate:{opacity:1,scale:1,y:0},
-        exit:{opacity:0,scale:1.25,filter:"blur(20px)"},
-        transition:{duration:1.3},
-        className:"w-full flex items-center justify-center"
-      },
-        React.createElement('div',{className:"w-[420px] max-w-[90vw] bg-white/10 backdrop-blur-xl border border-white/10 shadow-[0_40px_120px_rgba(0,0,0,0.65)] rounded-3xl p-12 flex flex-col items-center justify-center text-center gap-10"},
-          React.createElement(motion.h1,{
-            initial:{opacity:0,y:30},
-            animate:{opacity:1,y:0},
-            transition:{duration:1.1},
-            className:"text-white text-2xl sm:text-3xl font-light tracking-wide"
-          },"Something Special For You"),
-          React.createElement(motion.div,{
-            onClick:()=>setOpened(true),
-            className:"relative flex items-center justify-center",
-            whileHover:{scale:1.08,rotateY:14,rotateX:6},
-            whileTap:{scale:0.95},
-            style:{transformStyle:"preserve-3d"}
-          },
-            React.createElement(motion.div,{
-              animate:{rotateY:[0,10,-10,0]},
-              transition:{duration:7,repeat:Infinity},
-              className:"w-40 h-40 sm:w-44 sm:h-44 rounded-3xl bg-gradient-to-br from-fuchsia-600 via-rose-600 to-pink-600 shadow-[0_35px_90px_rgba(0,0,0,0.75)] flex items-center justify-center"
-            },React.createElement(Gift,{size:70,className:"text-white drop-shadow-2xl"})),
-            React.createElement(motion.div,{
-              className:"absolute inset-0 rounded-3xl blur-2xl bg-fuchsia-500/40",
-              animate:{opacity:[0.35,0.75,0.35]},
-              transition:{duration:4,repeat:Infinity}
-            }),
-            React.createElement('div',{className:"absolute -bottom-6 left-1/2 -translate-x-1/2 w-32 h-10 bg-black/50 blur-2xl rounded-full"})
-          ),
-          React.createElement('p',{className:"text-white/65 text-sm sm:text-base"},"Tap The Gift")
-        )
-      )
-      :React.createElement(motion.div,{
-        key:"stage2",
-        initial:{opacity:0},
-        animate:{opacity:1},
-        className:"absolute inset-0 flex flex-col items-center justify-center bg-black"
-      },
-        React.createElement(motion.div,{
-          initial:{opacity:0},
-          animate:{opacity:0.75},
-          transition:{duration:3},
-          className:"absolute w-[700px] h-[700px] bg-rose-500 blur-[240px] rounded-full"
-        }),
-        !showMessage ? React.createElement(motion.div,{
-          initial:{scale:0.9,opacity:0},
-          animate:{scale:1,opacity:1},
-          className:"relative text-center space-y-10"
-        },
-          React.createElement(motion.h2,{
-            initial:{letterSpacing:"0.5em",opacity:0},
-            animate:{letterSpacing:"0.08em",opacity:1},
-            transition:{duration:2},
-            className:"text-4xl sm:text-5xl text-white font-light"
-          },"A Message Waiting For You"),
-          React.createElement(motion.button,{
-            whileHover:{scale:1.08},
-            whileTap:{scale:0.95},
-            onClick:()=>setShowMessage(true),
-            className:"rounded-2xl px-12 py-5 text-lg bg-gradient-to-r from-fuchsia-600 to-rose-500 text-white shadow-2xl"
-          },React.createElement(Sparkles,{className:"inline mr-2"}),"Reveal Message")
-        )
-        :React.createElement(motion.div,{
-          initial:{opacity:0,y:60},
-          animate:{opacity:1,y:0},
-          transition:{duration:2},
-          className:"relative max-w-2xl text-center px-8"
-        },
-          React.createElement(motion.h2,{
-            initial:{opacity:0},
-            animate:{opacity:1},
-            transition:{duration:2},
-            className:"text-3xl sm:text-4xl text-white mb-12"
-          },"لَكِ أَنْتِ"),
-          React.createElement(motion.p,{
-            initial:{opacity:0},
-            animate:{opacity:1},
-            transition:{duration:3,delay:1},
-            className:"text-white/90 text-xl sm:text-2xl leading-loose whitespace-pre-line font-light",
-            dir:"rtl"
-          },secretMessage)
-        )
-      )
-    )
-  );
-}
+<script>
+  // Generate particles
+  const particlesContainer = document.getElementById('particles');
+  for(let i=0;i<14;i++){
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = Math.random()*100 + 'vw';
+    p.style.fontSize = (6+Math.random()*10)+'px';
+    p.style.animationDelay = (Math.random()*6)+'s';
+    particlesContainer.appendChild(p);
+  }
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(React.createElement(App));
+  // Gift click
+  const gift = document.querySelector('.gift');
+  const overlay = document.getElementById('overlay');
+  gift.addEventListener('click',()=>{ overlay.style.display='flex'; gift.parentElement.style.display='none'; });
+
+  // Reveal message
+  const revealBtn = document.getElementById('reveal-btn');
+  const secretMsg = document.getElementById('secret-message');
+  revealBtn.addEventListener('click',()=>{ secretMsg.style.display='block'; revealBtn.style.display='none'; });
 </script>
 </body>
 </html>
